@@ -25,7 +25,10 @@
         var socket = io();
         $('form').submit(function(event){
           event.preventDefault();
-          socket.emit('chat message', $('#m').val());
+          const $message = $('#m').val();
+
+          socket.emit('chat message', $message);
+          $('#messages').append($('<li>').text($message));
           $('#m').val('');
           return false;
         });
@@ -37,7 +40,6 @@
         })
         socket.on('chat message', function(msg){
           console.log('hello', msg);
-          $('#messages').append($('<li>').text(msg));
         });
       });
     </script>
