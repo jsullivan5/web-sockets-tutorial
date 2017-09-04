@@ -32,6 +32,9 @@
         socket.on('initial', (msg) => {
           $('#messages').append($('<li>').text(msg));
         })
+        socket.on('end', (msg) => {
+          $('#messages').append($('<li>').text(msg));
+        })
         socket.on('chat message', function(msg){
           console.log('hello', msg);
           $('#messages').append($('<li>').text(msg));
