@@ -2,7 +2,7 @@
 
 ### This exercise was completed as an introduction to web sockets through socket.io.
 
-## Objectives
+## Objectives - Create a basic real-time chat app with the following features:
 
   - Broadcast a message to connected users when someone connects or disconnects
   - Add support for nicknames
