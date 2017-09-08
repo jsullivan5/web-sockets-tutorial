@@ -9,13 +9,16 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   io.emit('initial', 'A user has connected')
 
-  socket.on('chat message', (msg) => {
-    console.log('Message: ', msg);
-    socket.broadcast.emit('chat message', msg);
-  })
+  socket.on('new message', (msg) => {
+    socket.broadcast.emit('new message', msg);
+  });
+
   socket.on('disconnect', function(){
-    console.log('user disconnected');
     io.emit('end', 'A User has disconnected')
+  });
+
+  socket.on('typing', function(userName) {
+      socket.broadcast.emit('typing', `${userName} is typing.`)
   });
 });
 

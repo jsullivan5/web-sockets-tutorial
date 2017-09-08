@@ -15,31 +15,55 @@
   </head>
   <body>
     <ul id="messages"></ul>
+    <div id=feedback></div>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input type="text" id="nick-name" placeholder="Nick Name">
+      <input id="m" autocomplete="off" placeholder="Message"/><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
         var socket = io();
+
+        function timeoutFunction() {
+          typing = false;
+          socket.emit("typing", false);
+        }
+        $('#m').on('keypress', function(e) {
+          const userName = $('#nick-name').val()
+
+          if ($('#m').val()) {
+            socket.emit('typing', userName)
+          }
+        });
+
+        socket.on('typing', (msg) => {
+          $('#feedback').text(msg)
+        })
+
         $('form').submit(function(event){
           event.preventDefault();
-          const $message = $('#m').val();
+          const message = $('#m').val();
+          const nickName = $('#nick-name').val()
 
-          socket.emit('chat message', $message);
-          $('#messages').append($('<li>').text($message));
+          socket.emit('new message', { nickName, message });
+          $('#messages').append($('<li>').text(`Me: ${message}`));
           $('#m').val('');
           return false;
         });
+
         socket.on('initial', (msg) => {
           $('#messages').append($('<li>').text(msg));
-        })
+        });
+
         socket.on('end', (msg) => {
           $('#messages').append($('<li>').text(msg));
-        })
-        socket.on('chat message', function(msg){
-          console.log('hello', msg);
+        });
+
+        socket.on('new message', function(msg) {
+          $('#feedback').text('')
+          $('#messages').append($('<li>').text(`${msg.nickName}: ${msg.message}`));
         });
       });
     </script>
