@@ -26,31 +26,25 @@
       $(function () {
         var socket = io();
 
-        function timeoutFunction() {
-          typing = false;
-          socket.emit("typing", false);
-        }
         $('#m').on('keypress', function(e) {
-          const userName = $('#nick-name').val()
-
           if ($('#m').val()) {
-            socket.emit('typing', userName)
+            socket.emit('typing', $('#nick-name').val());
           }
         });
 
         socket.on('typing', (msg) => {
-          $('#feedback').text(msg)
-        })
+          $('#feedback').text(msg);
+        });
 
         $('form').submit(function(event){
           event.preventDefault();
           const message = $('#m').val();
-          const nickName = $('#nick-name').val()
+          const nickName = $('#nick-name').val();
 
           socket.emit('new message', { nickName, message });
-          $('#messages').append($('<li>').text(`Me: ${message}`));
-          $('#m').val('');
-          return false;
+            $('#messages').append($('<li>').text(`Me: ${message}`));
+            $('#m').val('');
+            return false;
         });
 
         socket.on('initial', (msg) => {
@@ -62,7 +56,7 @@
         });
 
         socket.on('new message', function(msg) {
-          $('#feedback').text('')
+          $('#feedback').text('');
           $('#messages').append($('<li>').text(`${msg.nickName}: ${msg.message}`));
         });
       });
